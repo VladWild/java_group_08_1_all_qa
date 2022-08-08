@@ -1,14 +1,12 @@
 package ru.yandex.qa.tz3.task;
 
-import ru.yandex.qa.tz3.constants.Status;
-
 public class Task {
     protected int id;
     protected String name;
-    protected Status status;
+    protected TaskStatus status;
     protected String discription;
 
-    public Task(String name, Status status, String discription) {
+    public Task(String name, TaskStatus status, String discription) {
         this.name = name;
         this.status = status;
         this.discription = discription;
@@ -30,11 +28,11 @@ public class Task {
         this.name = name;
     }
 
-    public Status getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 
