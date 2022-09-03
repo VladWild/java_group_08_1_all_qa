@@ -22,6 +22,14 @@ public class FileBackedTaskManager extends InMamoryTaskManager {
         return i;
     }
 
+    public static FileBackedTaskManager loadFromFile(File file) {
+        final FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
+
+        //some logic read file
+
+        return taskManager;
+    }
+
     private void save() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
 
