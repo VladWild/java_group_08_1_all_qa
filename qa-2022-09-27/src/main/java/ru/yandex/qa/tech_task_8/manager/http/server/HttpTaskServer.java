@@ -1,10 +1,15 @@
 package ru.yandex.qa.tech_task_8.manager.http.server;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import ru.yandex.qa.tech_task_8.manager.Managers;
+import ru.yandex.qa.tech_task_8.manager.TaskManager;
+import ru.yandex.qa.tech_task_8.task.Task;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 
 public class HttpTaskServer {
     public static final int PORT = 8080;
@@ -13,10 +18,14 @@ public class HttpTaskServer {
     private static final String GENERAL_PATH = "/tasks";
 
     private final HttpServer server;
+    private final TaskManager taskManager;
+    private final Gson gson;
 
     public HttpTaskServer() throws IOException {
         server = HttpServer.create(new InetSocketAddress(HOST, PORT), 0);
         server.createContext("/tasks", this::handler);
+        taskManager = Managers.getDefault();
+        gson = Managers.getGson();
     }
 
     public static void main(String[] args) throws IOException {
@@ -59,6 +68,15 @@ public class HttpTaskServer {
                 System.out.println("Получаем таски");
             }
             case "POST" -> {
+                String json = readText(h);
+                if (json.isEmpty()) {
+                    System.out.println("Body c задачей  пустой. указывается в теле запроса");
+                    h.sendResponseHeaders(400, 0);
+                    return;
+                }
+                Task task = gson.fromJson(json, Task.class); //
+                taskManager.addNewTask(task);
+                h.sendResponseHeaders(200, 0);
                 System.out.println("Сохраняем таску");
             }
             case "PUT" -> {
@@ -72,5 +90,9 @@ public class HttpTaskServer {
                 h.sendResponseHeaders(405, 0);
             }
         }
+    }
+
+    private String readText(HttpExchange h) throws IOException {
+        return new String(h.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
     }
 }

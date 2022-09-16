@@ -1,4 +1,4 @@
-package ru.yandex.qa.tech_task_8.server;
+package ru.yandex.qa.tech_task_8.manager.http.server;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
@@ -17,6 +17,7 @@ public class KVServer {
 	public static final int PORT = 8078;
 	private final String apiToken;
 	private final HttpServer server;
+
 	private final Map<String, String> data = new HashMap<>();
 
 	public KVServer() throws IOException {
@@ -25,6 +26,11 @@ public class KVServer {
 		server.createContext("/register", this::register);
 		server.createContext("/save", this::save);
 		server.createContext("/load", this::load);
+	}
+
+	public static void main(String[] args) throws IOException {
+		KVServer kvServer = new KVServer();
+		kvServer.start();
 	}
 
 	private void load(HttpExchange h) {
