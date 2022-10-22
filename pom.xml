@@ -18,6 +18,7 @@
         <module>qa-2022-09-03</module>
         <module>qa-2022-09-27</module>
         <module>qa-2022-10-07</module>
+        <module>qa-2022-10-22</module>
     </modules>
 
     <properties>
