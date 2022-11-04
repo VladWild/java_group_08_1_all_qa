@@ -26,6 +26,7 @@ allure-results/
 /dist/
 /nbdist/
 /.nb-gradle/
+/postdres_data/
 build/
 
 ### VS Code ###
