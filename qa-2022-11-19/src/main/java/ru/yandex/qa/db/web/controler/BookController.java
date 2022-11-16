@@ -29,7 +29,7 @@ public class BookController {
     public List<BookDto> getAll() {
         final List<Book> books = bookService.getAll();
         return books.stream()
-                .map(bookMapper::mapToBookDto)
+                .map(bookMapper::toDto)
                 .collect(Collectors.toList());
     }
 }
