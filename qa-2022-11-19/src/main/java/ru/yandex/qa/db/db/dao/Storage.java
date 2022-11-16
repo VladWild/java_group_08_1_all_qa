@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface Storage<T extends StorageData<K>, K> {
 
-    void save(T data);
+    K save(T data);
 
     void update(T data);
 

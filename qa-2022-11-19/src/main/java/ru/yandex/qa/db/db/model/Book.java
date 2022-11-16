@@ -12,4 +12,12 @@ public class Book extends StorageData<Long> {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "title='" + title + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }

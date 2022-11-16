@@ -23,7 +23,8 @@ public class AbstractService <T extends StorageData<K>, K, S extends Storage<T, 
     }
 
     public T save(T data) {
-        storage.save(data);
+        K id = storage.save(data);
+        data.setId(id);
         return data;
     }
 

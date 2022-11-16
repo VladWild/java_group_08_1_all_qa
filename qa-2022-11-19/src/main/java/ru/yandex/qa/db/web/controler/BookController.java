@@ -1,14 +1,14 @@
 package ru.yandex.qa.db.web.controler;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.qa.db.db.model.Book;
 import ru.yandex.qa.db.service.impl.BookService;
-import ru.yandex.qa.db.web.dto.BookDto;
+import ru.yandex.qa.db.web.dto.request.BookRequestDto;
+import ru.yandex.qa.db.web.dto.response.BookResponseDto;
 import ru.yandex.qa.db.web.mapper.BookMapper;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,10 +26,17 @@ public class BookController {
     }
 
     @GetMapping
-    public List<BookDto> getAll() {
+    public List<BookResponseDto> getAll() {
         final List<Book> books = bookService.getAll();
         return books.stream()
                 .map(bookMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping
+    public Long saveBooks(@Valid @RequestBody BookRequestDto dto) {
+        Book book = bookMapper.toEntity(dto);
+        Book save = bookService.save(book);
+        return save.getId();
     }
 }

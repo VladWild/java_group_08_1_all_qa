@@ -1,11 +1,14 @@
 package ru.yandex.qa.db.db.dao.impl;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.qa.db.db.dao.Storage;
 import ru.yandex.qa.db.db.dao.impl.utils.BookStorageUtils;
 import ru.yandex.qa.db.db.model.Book;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 /**
@@ -21,13 +24,23 @@ public class BookStorage implements Storage<Book, Long> {
     }
 
     @Override
-    public void save(Book data) {
+    public Long save(Book book) {
+        String sqlQuery = "insert into books (title) values (?)";
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"id"});
+            stmt.setString(1, book.getTitle());
+            return stmt;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     @Override
-    public void update(Book data) {
-
+    public void update(Book book) {
+        String sqlQuery = "update BOOKS SET TITLE = ? WHERE ID = ?";
+        jdbcTemplate.update(sqlQuery, book.getTitle(), book.getId());
     }
 
     @Override
@@ -37,7 +50,8 @@ public class BookStorage implements Storage<Book, Long> {
 
     @Override
     public void delete(Long id) {
-
+        String sqlQuery = "delete from BOOKS WHERE ID = ?";
+        jdbcTemplate.update(sqlQuery, 6L);
     }
 
     @Override
