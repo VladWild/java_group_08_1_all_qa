@@ -3,10 +3,7 @@ package ru.yandex.qa.jdbc.tests;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.ConnectionCallback;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ContextConfiguration(classes = BookStorage.class)
@@ -195,6 +193,41 @@ class BooksTests extends JdbcH2Runner {
     }
 
     /**
+     * JdbcTemplate - обновление данных - делаем батчами batchSize
+     */
+    @Test
+    @Sql({"classpath:book/table.sql", "classpath:book/data_book.sql"})
+    void updateBookBatch() {
+        List<Book> books = bookStorage.getAll();
+        System.out.println(books);
+
+        Book book = new Book();
+        book.setTitle("Гарри Поттер и Орден Феникса");
+
+        Book book2 = new Book();
+        book2.setTitle("Гарри Поттер 2");
+
+        Book book3 = new Book();
+        book3.setTitle("Гарри Поттер 3");
+
+        List<Book> booksForSave = Arrays.asList(book, book2, book3);
+        jdbcTemplate.batchUpdate(
+                "insert into BOOKS (TITLE) values (?)",
+                new BatchPreparedStatementSetter() {
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ps.setString(1, booksForSave.get(i).getTitle());
+                    }
+
+                    public int getBatchSize() {
+                        return booksForSave.size();
+                    }
+                });
+
+        List<Book> books2 = bookStorage.getAll();
+        System.out.println(books2);
+    }
+
+    /**
      * BookStorage - обновление данных
      */
     @Test
@@ -239,6 +272,21 @@ class BooksTests extends JdbcH2Runner {
         System.out.println(books);
 
         bookStorage.delete(6L);
+
+        List<Book> books2 = bookStorage.getAll();
+        System.out.println(books2);
+    }
+
+    @Test
+    @Sql({"classpath:book/table.sql",  "classpath:book/data_book.sql"})
+    void transactionTest() {
+        List<Book> books = bookStorage.getAll();
+        System.out.println(books);
+
+        Book book = new Book();
+        book.setTitle("Новая книга");
+
+        bookStorage.saveAndDelete(book, 6L);
 
         List<Book> books2 = bookStorage.getAll();
         System.out.println(books2);
