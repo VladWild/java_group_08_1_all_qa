@@ -11,7 +11,7 @@ import ru.yandex.qa.db.db.model.base.StorageData;
  * @param <K> - тип ключа объекта модели
  * @param <S> - хранилище, умеющее делать CRUD операции с объетом модели
  */
-public class AbstractService <T extends StorageData<K>, K, S extends Storage<T, K>> {
+public abstract class AbstractService <T extends StorageData<K>, K, S extends Storage<T, K>> {
     protected final S storage;
 
     public AbstractService(S storage) {

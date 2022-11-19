@@ -59,17 +59,6 @@ class BooksTests extends JdbcH2Runner {
     @Sql({"classpath:book/table.sql", "classpath:book/data_book.sql"})
     void resultSetTestResultSetExtractorTest() {
         String sql = "select * from BOOKS";
-        List<Book> books = jdbcTemplate.query(sql, new BookResultSetExtractor());
-        System.out.println(books);
-    }
-
-    /**
-     * Еще упомянуть про jdbcTemplate.setFetchSize(2); и что это такое
-     */
-    @Test
-    @Sql({"classpath:book/table.sql", "classpath:book/data_book.sql"})
-    void resultSetTestFetchSizeFetchSizeTest() {
-        String sql = "select * from BOOKS";
         jdbcTemplate.setFetchSize(2);
         List<Book> books = jdbcTemplate.query(sql, new BookResultSetExtractor());
         System.out.println(books);
@@ -81,7 +70,7 @@ class BooksTests extends JdbcH2Runner {
     @Test
     @Sql({"classpath:book/table.sql", "classpath:book/data_book.sql"})
     void statementResultSetTest() {
-        String sql = "select * from BOOKS b where b.id = 1";
+        String sql = "select * from BOOKS b where b.id = 6";
         Book bookGet = jdbcTemplate.execute((ConnectionCallback<Book>) connection -> {
             Statement statement = connection.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -94,7 +83,7 @@ class BooksTests extends JdbcH2Runner {
                 book.setTitle(resultSet.getString("title"));
             }
 
-            //resultSet.previous();
+            resultSet.previous();
 
             return book;
         });
@@ -110,7 +99,7 @@ class BooksTests extends JdbcH2Runner {
         List<Book> books = bookStorage.getAll();
         System.out.println(books);
 
-        String sql = "select * from BOOKS b where b.id = 1";
+        String sql = "select * from BOOKS b where b.id = 6";
         Book bookGet = jdbcTemplate.execute((ConnectionCallback<Book>) connection -> {
             Statement statement = connection.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -119,7 +108,7 @@ class BooksTests extends JdbcH2Runner {
             Book book = new Book();
 
             resultSet.first();
-            resultSet.updateString("TITLE", "Гарри Поттер и Тайная Комната");
+            resultSet.updateString("TITLE", "Гарри Поттер и Кубок Огня");
             resultSet.updateRow();
 
             return book;
@@ -182,11 +171,30 @@ class BooksTests extends JdbcH2Runner {
         System.out.println(books);
 
         Book book = new Book();
-        book.setId(1L);
+        book.setId(6L);
         book.setTitle("Гарри Поттер и Орден Феникса");
 
         String sqlQuery = "update BOOKS SET TITLE = ? WHERE ID = ?";
         jdbcTemplate.update(sqlQuery, book.getTitle(), book.getId());
+
+        List<Book> books2 = bookStorage.getAll();
+        System.out.println(books2);
+    }
+
+    /**
+     * BookStorage - обновление данных
+     */
+    @Test
+    @Sql({"classpath:book/table.sql", "classpath:book/data_book.sql"})
+    void updateBookStorageTest() {
+        List<Book> books = bookStorage.getAll();
+        System.out.println(books);
+
+        Book book = new Book();
+        book.setId(6L);
+        book.setTitle("Гарри Поттер и Орден Феникса");
+
+        bookStorage.update(book);
 
         List<Book> books2 = bookStorage.getAll();
         System.out.println(books2);
@@ -222,25 +230,6 @@ class BooksTests extends JdbcH2Runner {
                         return booksForSave.size();
                     }
                 });
-
-        List<Book> books2 = bookStorage.getAll();
-        System.out.println(books2);
-    }
-
-    /**
-     * BookStorage - обновление данных
-     */
-    @Test
-    @Sql({"classpath:book/table.sql", "classpath:book/data_book.sql"})
-    void updateBookStorageTest() {
-        List<Book> books = bookStorage.getAll();
-        System.out.println(books);
-
-        Book book = new Book();
-        book.setId(6L);
-        book.setTitle("Гарри Поттер и Орден Феникса");
-
-        bookStorage.update(book);
 
         List<Book> books2 = bookStorage.getAll();
         System.out.println(books2);

@@ -46,13 +46,18 @@ public class BookStorage implements Storage<Book, Long> {
 
     @Override
     public Book get(Long id) {
-        return null;
+        String sql = "";
+        List<Book> book = jdbcTemplate.query(sql, BookStorageUtils::makeBook, id);
+        if (book.size() != 1) {
+            throw new RuntimeException("book id=" + id);
+        }
+        return book.get(0);
     }
 
     @Override
     public void delete(Long id) {
         String sqlQuery = "delete from BOOKS WHERE ID = ?";
-        jdbcTemplate.update(sqlQuery, 6L);
+        jdbcTemplate.update(sqlQuery, 6);
     }
 
     @Override
@@ -61,7 +66,7 @@ public class BookStorage implements Storage<Book, Long> {
         return jdbcTemplate.query(sql, BookStorageUtils::makeBook);
     }
 
-    //@Transactional
+    @Transactional
     public void saveAndDelete(Book saveBook, Long deleteBookId) {
         String sqlQueryUpdate = "insert into books (title) values (?)";
         jdbcTemplate.update(connection -> {
