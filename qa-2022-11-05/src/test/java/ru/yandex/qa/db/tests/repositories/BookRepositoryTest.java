@@ -26,6 +26,9 @@ class BookRepositoryTest extends JpaH2Runner {
     void findAllTest() {
         List<Book> books = bookRepository.findAll();
         System.out.println(books);
+
+        Optional<Book> byId = bookRepository.findById(1L);
+        bookRepository.saveAll(books);
     }
 
     @Test

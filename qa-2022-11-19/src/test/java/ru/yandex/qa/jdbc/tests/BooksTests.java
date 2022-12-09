@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,6 +30,9 @@ class BooksTests extends JdbcH2Runner {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
     private BookStorage bookStorage;
 
     /**
@@ -37,6 +43,25 @@ class BooksTests extends JdbcH2Runner {
     void resultSetTestBookMapperTest() {
         String sql = "select * from BOOKS";
         List<Book> books = jdbcTemplate.query(sql, new BookMapper());
+        System.out.println(books);
+    }
+
+    /**
+     * достать список
+     */
+    @Test
+    @Sql({"classpath:book/table.sql", "classpath:book/data_book.sql"})
+    void resultSetTestBookListTest() {
+        SqlParameterSource parameters = new MapSqlParameterSource("ids", Arrays.asList(6, 7, 8));
+
+        String sql = "select * from BOOKS b where b.id in (:ids)";
+        List<Book> books = namedParameterJdbcTemplate.query(sql, parameters,
+                (rs, rowNum) -> {
+                    Book book = new Book();
+                    book.setId(rs.getLong("id"));
+                    book.setTitle(rs.getString("title"));
+                    return book;
+                });
         System.out.println(books);
     }
 
