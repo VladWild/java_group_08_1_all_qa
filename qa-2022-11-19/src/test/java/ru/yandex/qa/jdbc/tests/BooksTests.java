@@ -180,7 +180,8 @@ class BooksTests extends JdbcH2Runner {
         Book book = new Book();
         book.setTitle("Гарри Поттер и Дары Смерти");
 
-        bookStorage.save(book);
+        Long bookSaveId = bookStorage.save(book);
+        System.out.println(bookSaveId);
 
         List<Book> books2 = bookStorage.getAll();
         System.out.println(books2);
