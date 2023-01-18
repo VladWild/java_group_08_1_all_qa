@@ -21,6 +21,7 @@
         <module>qa-2022-10-22</module>
         <module>qa-2022-11-05</module>
         <module>qa-2022-11-19</module>
+        <module>qa-2023-01-21</module>
     </modules>
 
     <properties>
