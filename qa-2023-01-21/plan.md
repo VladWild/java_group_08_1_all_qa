@@ -3,3 +3,8 @@
 1) Реализация связей в Hibernate 
    1) many-to-one 
    2) one-to-many
+   3) many-to-many 
+   4) one-to-one 
+2) Решения проблемы N + 1 
+   1) феч запрос 
+   2) граф 

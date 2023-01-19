@@ -13,7 +13,7 @@ class PaymentServiceTest {
     private PaymentService paymentService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         paymentService = new PaymentService(cbrRestHttpServiceMock);
     }
 
