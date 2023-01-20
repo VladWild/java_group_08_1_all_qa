@@ -1,4 +1,4 @@
-package ru.yandex.qa.model.one_to_many;
+package ru.yandex.qa.model.many_to_many;
 
 import ru.yandex.qa.model.BaseModel;
 
@@ -7,12 +7,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "person")
-@NamedEntityGraph(name = "Person.cars", attributeNodes = @NamedAttributeNode("cars"))
-public class Person extends BaseModel<Long> {
+@Table(name = "book")
+public class Book extends BaseModel<Long> {
 
     private String name;
-    private Set<Car> cars = new HashSet<>();
+    private Set<Author> authors = new HashSet<>();
 
     @Id
     @Override
@@ -29,12 +28,12 @@ public class Person extends BaseModel<Long> {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "person")
-    public Set<Car> getCars() {
-        return cars;
+    @ManyToMany(mappedBy = "books")
+    public Set<Author> getAuthors() {
+        return authors;
     }
 
-    public void setCars(Set<Car> cars) {
-        this.cars = cars;
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
     }
 }

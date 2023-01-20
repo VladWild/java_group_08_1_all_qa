@@ -1,4 +1,4 @@
-package ru.yandex.qa.one_to_many;
+package ru.yandex.qa.many_to_one;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
