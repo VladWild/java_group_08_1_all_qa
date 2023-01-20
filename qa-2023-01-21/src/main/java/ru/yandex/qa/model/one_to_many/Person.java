@@ -8,6 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "person")
+@NamedEntityGraph(name = "Person.cars", attributeNodes = @NamedAttributeNode("cars"))
 public class Person extends BaseModel<Long> {
 
     private Set<Car> cars = new HashSet<>();

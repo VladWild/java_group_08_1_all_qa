@@ -25,16 +25,19 @@ import javax.sql.DataSource;
         basePackages = {"ru.yandex.qa.repository"}
 )
 public class DbConfig {
+    private static final String URL = "jdbc:postgresql://localhost:5432/qa-2023-01-21";
+    private static final String USERNAME = "kitty";
+    private static final String PASSWORD = "purrrrrr";
 
     @Primary
-    @Bean(name = "dataSource2")
+    @Bean(name = "dataSource")
     public DataSource dataSource() {
         return DataSourceBuilder.create()
                 .type(HikariDataSource.class)
                 .driverClassName("org.postgresql.Driver")
-                .username("kitty")
-                .password("purrrrrr")
-                .url("jdbc:postgresql://localhost:5432/qa-2023-01-21")
+                .username(USERNAME)
+                .password(PASSWORD)
+                .url(URL)
                 .build();
     }
 
@@ -42,7 +45,7 @@ public class DbConfig {
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             EntityManagerFactoryBuilder builder,
-            @Qualifier("dataSource2") DataSource dataSource) {
+            @Qualifier("dataSource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
                 .packages("ru.yandex.qa.model")
