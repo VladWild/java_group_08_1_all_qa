@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Table(name = "car")
 public class Car extends BaseModel<Long> {
 
+    private String name;
     private Person person;
 
     @Id
@@ -15,6 +16,14 @@ public class Car extends BaseModel<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @ManyToOne

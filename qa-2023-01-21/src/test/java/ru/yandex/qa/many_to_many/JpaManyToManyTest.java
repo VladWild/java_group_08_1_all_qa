@@ -1,8 +1,10 @@
 package ru.yandex.qa.many_to_many;
 
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.qa.JpaTest;
 import ru.yandex.qa.many_to_many.utils.JpaManyToManyTestUtils;
@@ -68,5 +70,12 @@ public class JpaManyToManyTest extends JpaTest {
     void test5() {
         manyToManyService.method2();
         System.out.println("Ok!!!!");
+    }
+
+    @Test
+    @Sql("classpath:many_to_many/data.sql")
+    void test6() {
+        Page<Author> authorsPageSort = authorRepository.findAll(PageRequest.of(1, 2, Sort.by("name")));
+        System.out.println(authorsPageSort.get());
     }
 }
