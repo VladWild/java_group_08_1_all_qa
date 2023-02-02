@@ -5,5 +5,5 @@
 
 2) Запустить полученный из образа контейнер 
 
-> docker run --name hello_world_container -p 8080:8080 hello_world_image 
+> docker run --name hello_world_container -p 8081:8081 hello_world_image 
 
